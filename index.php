@@ -1,39 +1,61 @@
-<?php
-$servername = "127.0.0.1";
-$username = "vova";
-$password = "password";
-$database_name = "db";
-$table_name = "news";
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>news app</title>
 
-$connection = new mysqli($servername, $username, $password, $database_name);
+    <style>
+      h4, p {
+        margin: 0;
+      }
+    </style>
+  </head>
 
-if ($connection->connect_error) {
-  die("Connection failed: " . $connection->connect_error);
-}
+  <body>
+    <h1>News</h1>
+    <?php
+    $servername = "127.0.0.1";
+    $username = "vova";
+    $password = "password";
+    $database_name = "db";
+    $table_name = "news";
 
-$sql = "
-  CREATE TABLE IF NOT EXISTS $table_name (
-    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(30) NOT NULL,
-    text VARCHAR(30) NOT NULL
-  )
-";
+    $connection = new mysqli($servername, $username, $password, $database_name);
 
-if (!$connection->query($sql)) {
-  echo $connection->error;
-  die("Cannot create table $table_name");
-}
+    if ($connection->connect_error) {
+      die("Connection failed: " . $connection->connect_error);
+    }
 
-$sql = "SELECT id, title, text FROM news";
-$news = $connection->query($sql);
+    $sql = "
+    CREATE TABLE IF NOT EXISTS $table_name (
+      id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+      title VARCHAR(30) NOT NULL,
+      text VARCHAR(30) NOT NULL
+    )
+  ";
 
-if ($news->num_rows > 0) {
-  while($row = $news->fetch_assoc()) {
-    echo $row["title"] . " - " . $row["text"] . " (" . $row["id"] . ")<br>";
-  }
-} else {
-  echo "0 results";
-}
+    if (!$connection->query($sql)) {
+      echo $connection->error;
+      die("Cannot create table $table_name");
+    }
 
-$connection->close()
-?>
+    $sql = "SELECT id, title, text FROM news";
+    $news = $connection->query($sql);
+
+    if ($news->num_rows > 0) {
+      while($row = $news->fetch_assoc()) {
+        echo "
+          <article>
+            <h4>" . $row["title"] . "</h4>
+            <p>" . $row["text"] . "</p>
+          </article>
+        ";
+      }
+    } else {
+      echo "0 results";
+    }
+
+    $connection->close()
+    ?>
+
+  </body>
+</html>
